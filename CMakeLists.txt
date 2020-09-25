@@ -56,21 +56,21 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -ffast-math")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math")
 
-set(BUILD_WITH_MARCH_NATIVE OFF CACHE BOOL "Enable architecture-aware optimization (-march=native)")
-if(BUILD_WITH_MARCH_NATIVE)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native")
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native")
-    message(STATUS "Architecture-aware optimization (-march=native): ENABLED")
-else()
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native")
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -mtune=native")
-    message(STATUS "Architecture-aware optimization (-march=native): DISABLED")
-endif()
+#set(BUILD_WITH_MARCH_NATIVE OFF CACHE BOOL "Enable architecture-aware optimization (-march=native)")
+#if(BUILD_WITH_MARCH_NATIVE)
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native")
+#    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -mtune=native -march=native")
+#    message(STATUS "Architecture-aware optimization (-march=native): ENABLED")
+#else()
+#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=native")
+#    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -mtune=native")
+#    message(STATUS "Architecture-aware optimization (-march=native): DISABLED")
+#endif()
 
 # ----- Find dependencies -----
 
 # Threads
-find_package(Threads REQUIRED)
+#find_package(Threads REQUIRED)
 
 # Eigen
 find_package(Eigen3 3.3 REQUIRED)
@@ -83,14 +83,17 @@ find_package(OpenCV 3.3.1 QUIET
              COMPONENTS
              core imgcodecs videoio features2d calib3d highgui)
 if(NOT OpenCV_FOUND)
-    find_package(OpenCV 4.0 REQUIRED
+    find_package(OpenCV 4.0 QUIET
                  COMPONENTS
                  core imgcodecs videoio features2d calib3d highgui)
     if(NOT OpenCV_FOUND)
-        message(FATAL_ERROR "OpenCV >= 3.3.1 not found")
+        #message(FATAL_ERROR "OpenCV >= 3.3.1 not found")
     endif()
 endif()
-message(STATUS "Use OpenCV ${OpenCV_VERSION}")
+#message(STATUS "Use OpenCV ${OpenCV_VERSION}")
+set(OpenCV_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/sdk/native/jni/include)
+include_directories(${OpenCV_INCLUDE_DIRS})
+link_directories(${CMAKE_INSTALL_PREFIX}/sdk/native/libs/arm64-v8a)
 
 # ----- Install configuration -----
 
