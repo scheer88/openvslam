@@ -68,7 +68,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math")
 #endif()
 
 # ----- Find dependencies -----
-
+if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
 # Threads
 #find_package(Threads REQUIRED)
 
@@ -95,6 +95,31 @@ set(OpenCV_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/sdk/native/jni/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(${CMAKE_INSTALL_PREFIX}/sdk/native/libs/arm64-v8a)
 
+else()
+
+# Threads
+find_package(Threads REQUIRED)
+
+# Eigen
+find_package(Eigen3 3.3 REQUIRED)
+
+# yaml-cpp
+find_package(yaml-cpp REQUIRED)
+
+# OpenCV
+find_package(OpenCV 3.3.1 QUIET
+             COMPONENTS
+             core imgcodecs videoio features2d calib3d highgui)
+if(NOT OpenCV_FOUND)
+    find_package(OpenCV 4.0 REQUIRED
+                 COMPONENTS
+                 core imgcodecs videoio features2d calib3d highgui)
+    if(NOT OpenCV_FOUND)
+        message(FATAL_ERROR "OpenCV >= 3.3.1 not found")
+    endif()
+endif()
+message(STATUS "Use OpenCV ${OpenCV_VERSION}")
+endif()
 # ----- Install configuration -----
 
 include(CMakePackageConfigHelpers)
