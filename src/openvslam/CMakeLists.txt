@@ -167,7 +167,7 @@ else()
 # Link to required libraries
 target_link_libraries(${PROJECT_NAME}
                       PUBLIC
-                      Threads::Threads
+                      #Threads::Threads
                       Eigen3::Eigen
                       yaml-cpp
                       opencv_core
