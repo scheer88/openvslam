@@ -40,3 +40,5 @@ cmake-build-release/
 *.out
 *.app
 .DS_Store
+vc_build/*
+.vscode/*
