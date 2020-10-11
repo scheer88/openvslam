@@ -42,3 +42,4 @@ cmake-build-release/
 .DS_Store
 vc_build/*
 .vscode/*
+xcode_build

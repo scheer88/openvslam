@@ -226,8 +226,7 @@ void tracking_module::track() {
         if (tracking_state_ == tracker_state_t::Lost
             && curr_frm_.id_ - initializer_.get_initial_frame_id() < camera_->fps_ * init_retry_thr) {
             spdlog::info("tracking lost within {} sec after initialization", init_retry_thr);
-            // system_->request_reset();
-            reset();
+            system_->request_reset();
             return;
         }
 
@@ -266,8 +265,7 @@ bool tracking_module::initialize() {
     // if map building was failed -> reset the map database
     if (initializer_.get_state() == module::initializer_state_t::Wrong) {
         // reset
-        // system_->request_reset();
-        reset();
+        system_->request_reset();
         return false;
     }
 

@@ -102,7 +102,7 @@ public:
     //! (NOTE: this function does not wait for abort)
     void abort_loop_BA();
 
-private:
+protected:
     //-----------------------------------------
     // main process
 

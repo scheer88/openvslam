@@ -98,7 +98,7 @@ public:
     //! (NOTE: this function does not wait for abort)
     void abort_local_BA();
 
-//private:
+// protected:
     //-----------------------------------------
     // main process
 
