@@ -93,7 +93,7 @@ endif()
 #message(STATUS "Use OpenCV ${OpenCV_VERSION}")
 set(OpenCV_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/sdk/native/jni/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
-link_directories(${CMAKE_INSTALL_PREFIX}/sdk/native/libs/arm64-v8a)
+link_directories(${CMAKE_INSTALL_PREFIX}/sdk/native/libs/${ANDROID_ABI})
 
 else()
 
