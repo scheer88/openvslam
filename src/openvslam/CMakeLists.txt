@@ -54,6 +54,8 @@ add_library(${PROJECT_NAME}
 
 # Set output directory of the library
 set_target_properties(${PROJECT_NAME} PROPERTIES
+                      FRAMEWORK TRUE
+                      XCODE_ATTRIBUTE_INSTALL_PATH "@rpath"
                       OUTPUT_NAME openvslam
                       LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
@@ -113,22 +115,61 @@ message(STATUS "BoW framework: ${BOW_FRAMEWORK} (found in ${BoW_INCLUDE_DIR})")
 
 # ----- Configure OpenVSLAM library -----
 
+include_directories(${PROJECT_SOURCE_DIR}/../include/g2o/EXTERNAL/csparse)
 # Include directories
 target_include_directories(${PROJECT_NAME}
                            PUBLIC
                            $<BUILD_INTERFACE:${json_INCLUDE_DIR}>
                            $<BUILD_INTERFACE:${spdlog_INCLUDE_DIR}>
-                           $<BUILD_INTERFACE:${BoW_INCLUDE_DIR}>
                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/>
                            $<INSTALL_INTERFACE:include/openvslam/3rd/json/include>
                            $<INSTALL_INTERFACE:include/openvslam/3rd/spdlog/include>
-                           $<INSTALL_INTERFACE:${BoW_INCLUDE_DIR}>
                            $<INSTALL_INTERFACE:include/>)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
+set(ANDROID_LIBS  android log)
+MESSAGE(FATAL_ERROR asdasdsddas)
+find_library(
+       log-lib
+       log)
+
+ target_link_libraries(${PROJECT_NAME}
+       PUBLIC
+       ${ANDROID_LIBS}
+       mediandk
+
+       #Threads::Threads
+       Eigen3::Eigen
+       yaml-cpp
+       opencv_core
+       opencv_features2d
+       opencv_calib3d
+       opencv_imgproc
+       opencv_videoio
+       opencv_imgcodecs
+       opencv_flann
+       opencv_highgui
+       g2o::core
+       g2o::stuff
+       g2o::types_sba
+       g2o::types_sim3
+       g2o::solver_dense
+       g2o::solver_eigen
+       g2o::solver_csparse
+       g2o::csparse_extension
+       ${CXSPARSE_LIBRARIES}
+       ${SUITESPARSE_LIBRARIES}
+       ${BoW_LIBRARY}
+       PRIVATE
+       ${LAPACK_LIBRARIES}
+)
+
+else()
 
 # Link to required libraries
 target_link_libraries(${PROJECT_NAME}
                       PUBLIC
-                      Threads::Threads
+                      #Threads::Threads
                       Eigen3::Eigen
                       yaml-cpp
                       opencv_core
@@ -147,7 +188,7 @@ target_link_libraries(${PROJECT_NAME}
                       ${BoW_LIBRARY}
                       PRIVATE
                       ${LAPACK_LIBRARIES})
-
+endif()
 # ----- Install configuration -----
 
 set(OPENVSLAM_INCLUDE_INSTALL_DIR ${INCLUDES_DESTINATION}/openvslam)
@@ -157,6 +198,7 @@ install(TARGETS ${PROJECT_NAME}
         EXPORT ${OPENVSLAM_TARGETS_EXPORT_NAME}
         RUNTIME DESTINATION ${RUNTIME_DESTINATION}
         LIBRARY DESTINATION ${LIBRARY_DESTINATION}
+        FRAMEWORK DESTINATION ${LIBRARY_DESTINATION}
         ARCHIVE DESTINATION ${ARCHIVE_DESTINATION})
 
 # Install OpenVSLAM headers
