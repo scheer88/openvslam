@@ -39,3 +39,7 @@ cmake-build-release/
 *.exe
 *.out
 *.app
+.DS_Store
+vc_build/*
+.vscode/*
+xcode_build
